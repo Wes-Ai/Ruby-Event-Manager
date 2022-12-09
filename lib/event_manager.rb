@@ -13,9 +13,9 @@ def clean_phone_numbers(num)
   len = num.length
 
   case len
-  when len = 10 then format_phone_number(num)
-  when (len = 11 && num[0] == 1) then format_phone_number(num[0,9])
-  else format_phone_number(bad_num)
+  when len = 10 then num
+  when (len = 11 && num[0] == 1) then num[0,9]
+  else bad_num
   end
 end
 
@@ -63,7 +63,7 @@ contents.each do |row|
   id = row[0]
   name = row[:first_name]
   zipcode = clean_zipcode(row[:zipcode])
-  p phone_num = clean_phone_numbers(row[:homephone])
+  phone_num = clean_phone_numbers(row[:homephone])
   legislators = legislators_by_zipcode(zipcode)
 
   form_letter = erb_template.result(binding)
