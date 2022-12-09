@@ -5,7 +5,7 @@ require 'erb'
 def clean_zipcode(zipcode)
   zipcode.to_s.rjust(5,"0")[0..4]
 end
-
+# Clean and return a valid phone number string of 10 digits.
 def clean_phone_numbers(num)
   num.gsub!(/[^0-9]/, '')
   # Replace bad phone numbers with this
@@ -19,6 +19,7 @@ def clean_phone_numbers(num)
   end
 end
 
+# Format phone numbers in the tradional formatting: "(XXX) XXX-XXXX"
 def format_phone_number(num)
   '(' + num[0,3] + ') ' + num[3,3] + '-' + num[6,4]
 end
