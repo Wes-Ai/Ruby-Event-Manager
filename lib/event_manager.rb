@@ -1,6 +1,8 @@
 require 'csv'
 require 'google/apis/civicinfo_v2'
 require 'erb'
+require 'time'
+require 'date'
 
 def clean_zipcode(zipcode)
   zipcode.to_s.rjust(5,"0")[0..4]
@@ -66,6 +68,11 @@ contents.each do |row|
   zipcode = clean_zipcode(row[:zipcode])
   phone_num = clean_phone_numbers(row[:homephone])
   legislators = legislators_by_zipcode(zipcode)
+
+  #p fixed_format_date = Date.strptime(row[:regdate], '%m/%d/%y')
+  p parseable_date = Date.strptime(row[:regdate], '%m/%d/%y').to_s + ' ' + row[:regdate][8,6].to_s
+  #DateTime.parse(row[:regdate])
+  
 
   form_letter = erb_template.result(binding)
 
