@@ -55,6 +55,11 @@ def most_common_value(array)
   array.group_by { |x| x }.max_by { |_key, group| group.size }[0]
 end
 
+def day_of_week(day_num)
+  days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+  return days[day_num]
+end
+
 puts 'EventManager initialized.'
 
 contents = CSV.open(
@@ -66,6 +71,7 @@ contents = CSV.open(
 template_letter = File.read('form_letter.erb')
 erb_template = ERB.new template_letter
 popular_hours = []
+popular_weekdays = []
 
 contents.each do |row|
   id = row[0]
@@ -77,6 +83,7 @@ contents.each do |row|
   # Creating time object from CSV's date / time.
   formatted_date_time = DateTime.strptime(row[:regdate], '%m/%d/%Y %H:%M')
   popular_hours << formatted_date_time.hour
+  popular_weekdays << formatted_date_time.wday
 
 
   
@@ -87,3 +94,4 @@ contents.each do |row|
 end
 
 puts "Bossman! The most popular hour is: " + most_common_value(popular_hours).to_s + "00."
+puts "OK you the man, Boss! The most popular day is " + day_of_week(most_common_value(popular_weekdays)).to_s + "."
