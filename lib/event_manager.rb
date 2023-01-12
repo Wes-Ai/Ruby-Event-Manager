@@ -51,6 +51,10 @@ def save_thank_you_letter(id,form_letter)
   end
 end
 
+def most_common_value(array)
+  array.group_by { |x| x }.max_by { |_key, group| group.size }[0]
+end
+
 puts 'EventManager initialized.'
 
 contents = CSV.open(
@@ -61,6 +65,7 @@ contents = CSV.open(
 
 template_letter = File.read('form_letter.erb')
 erb_template = ERB.new template_letter
+popular_hours = []
 
 contents.each do |row|
   id = row[0]
@@ -69,12 +74,16 @@ contents.each do |row|
   phone_num = clean_phone_numbers(row[:homephone])
   legislators = legislators_by_zipcode(zipcode)
 
-  #p fixed_format_date = Date.strptime(row[:regdate], '%m/%d/%y')
-  p parseable_date = Date.strptime(row[:regdate], '%m/%d/%y').to_s + ' ' + row[:regdate][8,6].to_s
-  #DateTime.parse(row[:regdate])
+  # Creating time object from CSV's date / time.
+  formatted_date_time = DateTime.strptime(row[:regdate], '%m/%d/%Y %H:%M')
+  popular_hours << formatted_date_time.hour
+
+
   
 
   form_letter = erb_template.result(binding)
 
   save_thank_you_letter(id,form_letter)
 end
+
+puts "Bossman! The most popular hour is: " + most_common_value(popular_hours).to_s + "00."
